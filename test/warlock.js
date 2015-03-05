@@ -13,6 +13,15 @@ describe('locking', function() {
     });
   });
 
+  it('returns true if key is locked', function(done) {
+    warlock.isLocked('testLock', function(err, isLocked) {
+      should.not.exist(err);
+      isLocked.should.equal(true);
+
+      done();
+    });
+  });
+
   it('does not set lock if it already exists', function(done) {
     warlock.lock('testLock', 1000, function(err, unlock) {
       should.not.exist(err);
@@ -41,6 +50,15 @@ describe('locking', function() {
     warlock.lock('unlock', 1000, function(err, unlock) {
       should.not.exist(err);
       unlock(done);
+    });
+  });
+
+  it('returns false if key is unlocked', function(done) {
+    warlock.isLocked('unlock', function(err, isLocked) {
+      should.not.exist(err);
+      isLocked.should.equal(false);
+      
+      done();
     });
   });
 });
