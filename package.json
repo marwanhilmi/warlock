@@ -1,10 +1,11 @@
 {
   "name": "node-redis-warlock",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Battle-hardened distributed locking using redis",
   "main": "lib/warlock.js",
   "scripts": {
-    "test": "make test"
+    "test": "mocha -R list ./test/warlock",
+    "bench": "mocha -R list ./test/bench"
   },
   "repository": {
     "type": "git",
@@ -22,13 +23,13 @@
   },
   "homepage": "https://github.com/thedeveloper/warlock",
   "dependencies": {
-    "node-redis-scripty": "~0.0.4",
-    "uuid": "2.0.1"
+    "node-redis-scripty": "0.0.5",
+    "uuid": "^2.0.1"
   },
   "devDependencies": {
-    "should": "^3.1.3",
-    "mocha": "^1.17.1",
-    "redis": "^0.10.1",
-    "async": "^0.9.0"
+    "async": "^1.5.1",
+    "mocha": "^2.3.4",
+    "redis": "^2.4.2",
+    "should": "^8.0.2"
   }
 }
