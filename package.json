@@ -1,6 +1,6 @@
 {
   "name": "@counterplay/warlock",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Battle-hardened distributed locking using redis",
   "main": "lib/warlock.js",
   "scripts": {
