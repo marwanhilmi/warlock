@@ -1,6 +1,9 @@
 var should  = require('should');
 var redis = require('./setup/redisConnection');
+var Promise = require('bluebird');
 var warlock = require('../lib/warlock')(redis);
+var warlockThen = Promise.promisifyAll(warlock);
+
 require('./setup/redisFlush');
 
 describe('locking', function() {
@@ -8,7 +11,6 @@ describe('locking', function() {
     warlock.lock('testLock', 1000, function(err, unlock) {
       should.not.exist(err);
       (typeof unlock).should.equal('function');
-
       done();
     });
   });
@@ -26,7 +28,6 @@ describe('locking', function() {
     warlock.lock('testLock', 1000, function(err, unlock) {
       should.not.exist(err);
       unlock.should.equal(false);
-
       done();
     });
   });
@@ -57,7 +58,7 @@ describe('locking', function() {
     warlock.isLocked('unlock', function(err, isLocked) {
       should.not.exist(err);
       isLocked.should.equal(false);
-      
+
       done();
     });
   });
@@ -89,5 +90,66 @@ describe('unlocking with id', function() {
       result.should.equal(1);
       done();
     });
+  });
+});
+
+describe('locking', function() {
+  it('sets lock', function (done) {
+    warlockThen.lockAsync('testLockAsync', 1000)
+		.then(unlock => {
+			(typeof unlock).should.equal('function');
+			done();
+		})
+		.catch(err => {
+			should.not.exist(err);
+			done();
+		})
+  });
+
+  it('returns true if key is locked', function(done) {
+		warlockThen.isLockedAsync('testLockAsync')
+		.then(isLocked => {
+			isLocked.should.equal(true);
+      done();
+		})
+		.catch(err => {
+			should.not.exist(err);
+			done();
+		})
+  });
+
+  it('does not set lock if it already exists', function(done) {
+		warlockThen.lockAsync('testLockAsync', 1000)
+		.then(unlock => {
+			unlock.should.equal(false);
+			done();
+		})
+		.catch(err => {
+			should.not.exist(err);
+			done();
+		})
+  });
+
+  it('unlocks', function(done) {
+		warlockThen.lockAsync('unlockAsync', 1000)
+		.then(unlock => {
+			unlock(done);
+		})
+		.catch(err => {
+			should.not.exist(err);
+			done();
+		})
+  });
+
+  it('returns false if key is unlocked', function(done) {
+		warlockThen.isLockedAsync('unlockAsync')
+		.then(isLocked => {
+			isLocked.should.equal(false);
+			done();
+		})
+		.catch(err => {
+			should.not.exist(err);
+			done();
+		})
   });
 });
